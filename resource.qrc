@@ -1,8 +1,8 @@
 <RCC>
   <qresource prefix="FigureImage">
+    <file>resource/bg.jpg</file>
     <file>resource/Had.jpg</file>
     <file>resource/NotHad.jpg</file>
-    <file alias="./OSXLite.qss">./OSXLite.qss</file>
     <file>resource/icon.png</file>
   </qresource>
 </RCC>

@@ -8,9 +8,7 @@ class Warning(QtWidgets.QWidget):
         self.main_layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.main_layout)
         self.main_layout.setAlignment(QtCore.Qt.AlignTop)
-        self.setMaximumWidth(500)
-        self.setMinimumHeight(500)
-        self.setGeometry(0, 0, 100, 100)
+        self.setMaximumWidth(300)
 
     def add_warn(self, message, type='warn', delay=3):
         self.parent.show()
@@ -29,6 +27,8 @@ class Warning(QtWidgets.QWidget):
         timer = QtCore.QTimer(self.parent)
         timer.start(delay * 1000)
         timer.timeout.connect(partial(self.remove_warn, timer=timer, label=label))
+        assert isinstance(self.parent,QtWidgets.QDockWidget)
+        self.parent.setGeometry(0,20,300, self.height())
 
     def remove_warn(self, timer: QtCore.QTimer, label: QtWidgets.QLabel):
         timer.stop()
