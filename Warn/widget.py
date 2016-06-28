@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from functools import partial
 
+
 class Warning(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Warning, self).__init__()
@@ -23,16 +24,18 @@ class Warning(QtWidgets.QWidget):
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setMaximumHeight(200)
         label.setMinimumHeight(200)
+        label.setWordWrap(True)
         self.main_layout.addWidget(label)
         timer = QtCore.QTimer(self.parent)
         timer.start(delay * 1000)
         timer.timeout.connect(partial(self.remove_warn, timer=timer, label=label))
-        assert isinstance(self.parent,QtWidgets.QDockWidget)
-        self.parent.setGeometry(0,20,300, self.height())
+        assert isinstance(self.parent, QtWidgets.QDockWidget)
+        self.parent.setGeometry(0, 20, 300, self.main_layout.count() * 200)
 
     def remove_warn(self, timer: QtCore.QTimer, label: QtWidgets.QLabel):
-        timer.stop()
+        timer.deleteLater()
         label.setParent(None)
         label.destroy()
+        self.parent.setGeometry(0, 20, 300, self.main_layout.count() * 200 - 200)
         if self.main_layout.count() == 0:
             self.parent.hide()

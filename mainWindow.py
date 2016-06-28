@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+import ctypes
 import sys
 import os
-
+import logging
+from WindowEventHandler.windowHandler import CustomQAbstractNativeEventFilter
 import time
 
 sys.path.append(os.path.abspath('..'))
@@ -12,6 +14,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from Login import LoginForm
 
 from data import DataStore
+from HttpRequest.request import Fetch
+from PyQt5.QtNetwork import QNetworkRequest
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -20,6 +24,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.store = DataStore()
         self.settings = self.store.settings
         self.data = self.store.data
+        self.session = requests.session()
+        fetch = Fetch(parent=self)
+        self.store.fetch = fetch
+        self.fetch = fetch
         self.setWindowTitle("芜湖东站点名会系统")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(r':/FigureImage/resource/icon.png'),
@@ -29,9 +37,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setup_dock_widget()
         self.warn = WarnWidget.Warning(parent=self.dockWidget)
         self.dockWidget.setWidget(self.warn)
-        login_form = LoginForm()
+        login_form = LoginForm(parent=self)
         self.setCentralWidget(login_form)
-        self.warn.add_warn('515')
 
     def setup_dock_widget(self):
         self.dockWidget = QtWidgets.QDockWidget(self)
@@ -40,25 +47,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.dockWidget.setWindowOpacity(0.7)
         self.dockWidget.setTitleBarWidget(QtWidgets.QWidget())
         self.dockWidget.hide()
-
-    def login_commit(self, username, password, boolean):
-        response = self.session.post(url=url_resolve.parse_url('api/auth/login/'),
-                                     data={'email': '',
-                                           'password': password,
-                                           'username': username
-                                           })
-        """:type :requests.Response """
-        if response.status_code == 200:
-            _get_detail_response = self.session.get(url=url_resolve.parse_url('api/menu/get-user-detail'))
-            self.username = _get_detail_response.json().get('name')
-            self.department = _get_detail_response.json().get('department')
-            if boolean:
-                self.setCentralWidget(
-                    FigureCollectionLogic.FigureCollectionLogic(main_window=self, session=self.session))
-            else:
-                self.setCentralWidget(DisplayLogic.DisplayStarting(session=self.session, main_window=self))
-        else:
-            message = QtWidgets.QMessageBox.warning(self, "错误", str(response.json()), QtWidgets.QMessageBox.Yes)
 
     def start_call_over(self):
         response = self.session.post(url=url_resolve.parse_url('api/call_over/begin-call-over/'))
@@ -86,13 +74,23 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             QtWidgets.QMessageBox.warning(self, "警告", "后台正在处理数据，请勿关闭")
             event.ignore()
+    def nativeEvent(self, eventType, message):
+        print(eventType)
+        print(message)
+        return False, 0
+
 
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    qss = open('./OSXLite.qss').read()
-    app.setStyleSheet(qss)
-    mainWindow = MainWindow()
-    mainWindow.show()
-    mainWindow.showMaximized()
-    sys.exit(app.exec_())
+    try:
+        app = QtWidgets.QApplication(sys.argv)
+        qss = open('./OSXLite.qss').read()
+        app.setStyleSheet(qss)
+        mainWindow = MainWindow()
+        # eventFilter = CustomQAbstractNativeEventFilter()
+        # mainWindow.installEventFilter(eventFilter)
+        mainWindow.show()
+        mainWindow.showMaximized()
+        sys.exit(app.exec_())
+    except BaseException:
+        raise BaseException

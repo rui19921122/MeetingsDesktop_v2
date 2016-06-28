@@ -122,14 +122,14 @@ border-image:none;
                   <enum>QLayout::SetMinimumSize</enum>
                  </property>
                  <item>
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="LoginButton">
                    <property name="text">
                     <string>登陆</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton_2">
+                  <widget class="QPushButton" name="FigureButton">
                    <property name="text">
                     <string>指纹</string>
                    </property>
