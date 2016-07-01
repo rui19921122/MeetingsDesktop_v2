@@ -3,8 +3,8 @@ import json
 from PyQt5 import QtCore
 
 import requests
-from PyQt5.QtCore import QThread,QMutex
-from mainWindow import MainWindow
+from PyQt5.QtCore import QThread, QMutex
+import mainWindow
 from PyQt5.QtNetwork import QNetworkReply
 from UrlFunc.url_resolve import parse_url
 
@@ -33,10 +33,8 @@ class HttpRequest(QThread):
                 response = self.session.delete(self.url)
             else:
                 raise Exception('不正确的方法')
-            assert isinstance(response, requests.Response)
             if response.status_code >= 300:
                 data = response.json()
-                print(data)
                 if 'non_field_errors' in data:
                     error_message = data['non_field_errors']
                 else:
@@ -52,3 +50,4 @@ class HttpRequest(QThread):
             self.failed.emit('网络请求错误，原因未知')
         finally:
             mutex.unlock()
+            self.deleteLater()

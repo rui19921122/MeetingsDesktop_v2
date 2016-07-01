@@ -7,6 +7,7 @@ from DisplayWait import DisplayWorkerForm
 
 
 class LoginForm(QtWidgets.QWidget, Ui_Form):
+    login_success = QtCore.pyqtSignal()
     def __init__(self, parent: MainWindow):
         super(LoginForm, self).__init__()
         self.parent = parent
@@ -40,14 +41,11 @@ class LoginForm(QtWidgets.QWidget, Ui_Form):
             thread = HttpRequest(parent=self.parent, url='api/v2/auth/login/', method='post',
                                  data={'username': 'test',
                                        'password': '111111'})
-            thread.start()
             thread.failed.connect(lambda message: self.parent.warn.add_warn(message))
-            thread.success.connect(self.handleLoginSuccess)
+            thread.success.connect(lambda message: self.login_success.emit())
+            thread.start()
             # self.parent.fetch.post('/api/v2/auth/login/', data={'username': username, 'password': password})
-
-    def handleLoginSuccess(self, data):
-        self.parent.login_form = DisplayWorkerForm(parent=self.parent)
-        self.parent.setCentralWidget(self.parent.login_form)
 
     def handle_reply(self, data):
         print(data)
+

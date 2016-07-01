@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1110</width>
-    <height>754</height>
+    <width>1105</width>
+    <height>726</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,118 +16,6 @@
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="0">
-        <widget class="QLabel" name="Video">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="statusTip">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>摄影设备状态</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="Figure">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="statusTip">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>指纹仪设备状态</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="AudioStatus">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="statusTip">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="Audio">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="statusTip">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>录音设备状态</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="FigureStatus">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="statusTip">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="VideoStatus">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="statusTip">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -159,7 +47,14 @@
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
-          <string>刷新状态</string>
+          <string>刷新考勤状态</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="text">
+          <string>设备状态</string>
          </property>
         </widget>
        </item>
@@ -177,6 +72,13 @@
         </spacer>
        </item>
       </layout>
+     </item>
+     <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+      <widget class="QLabel" name="informationLabel">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
      <item alignment="Qt::AlignHCenter">
       <widget class="QTableWidget" name="tableWidget">
@@ -260,7 +162,7 @@
          <string>姓名</string>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignCenter</set>
         </property>
        </column>
        <column>
@@ -278,22 +180,22 @@
          <string>指纹状态</string>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignCenter</set>
         </property>
        </column>
        <item row="0" column="0">
         <property name="text">
-         <string>1</string>
+         <string/>
         </property>
        </item>
        <item row="0" column="1">
         <property name="text">
-         <string>1</string>
+         <string/>
         </property>
        </item>
        <item row="0" column="2">
         <property name="text">
-         <string>2</string>
+         <string/>
         </property>
        </item>
        <item row="1" column="2">
@@ -301,7 +203,7 @@
          <string/>
         </property>
         <property name="textAlignment">
-         <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+         <set>AlignCenter</set>
         </property>
        </item>
       </widget>
@@ -377,7 +279,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="resource.qrc"/>
+  <include location="../resource.qrc"/>
  </resources>
  <connections/>
 </ui>
