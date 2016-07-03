@@ -16,11 +16,13 @@ from Login import LoginForm
 from data import DataStore, DeviceInfo
 from PyQt5.QtNetwork import QNetworkRequest
 from DisplayWait import DisplayWorkerForm
+from CallOverScreen import CallOverScreenWidget
 
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.can_close = True
         self.store = DataStore()
         self.settings = self.store.settings
         self.data = self.store.data
@@ -43,8 +45,21 @@ class MainWindow(QtWidgets.QMainWindow):
     def login_success(self):
         self.login_form.close()
         self.display_form = DisplayWorkerForm(parent=self)
+        self.display_form._begin_call_over.connect(self.begin_call_over)
         self.setCentralWidget(self.display_form)
 
+    def begin_call_over(self, data):
+
+        self.display_form.close()
+        self.call_over_form = CallOverScreenWidget(data=data, parent=self)
+        self.setCentralWidget(self.call_over_form)
+        self.call_over_form.over.connect(self.call_over_over)
+
+    def call_over_over(self, id):
+        self.call_over_form.close()
+        from OverCall import OverCallWidget
+        self.over_call_widget = OverCallWidget(self, id)
+        self.setCentralWidget(self.over_call_widget)
 
     def setup_dock_widget(self):
         self.dockWidget = QtWidgets.QDockWidget(self)
@@ -56,6 +71,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
+
+    def closeEvent(self, event, *args, **kwargs):
+        if self.can_close:
+            event.accept()
+        else:
+            QtWidgets.QMessageBox.warning(self, "警告", "后台正在处理数据，请勿关闭")
+            event.ignore()
 
 
 if __name__ == '__main__':

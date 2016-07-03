@@ -26,7 +26,8 @@ class AlignHCenterTableItem(QtWidgets.QTableWidgetItem):
 
 class DisplayWorkerForm(QtWidgets.QWidget, Ui_DisplayWorker):
     figure_checked = QtCore.pyqtSignal(bytes)
-    _begin_call_over = QtCore.pyqtSignal()
+    _begin_call_over = QtCore.pyqtSignal(dict)
+    worker_data = QtCore.pyqtSignal(dict)
 
     def __init__(self, parent):
         super(DisplayWorkerForm, self).__init__()
@@ -41,11 +42,35 @@ class DisplayWorkerForm(QtWidgets.QWidget, Ui_DisplayWorker):
         self.pushButton.setStyleSheet('border-color:gray')
         self.BeginButton.clicked.connect(self.BeginButtonClicked)
         self.figure_checked.connect(partial(post_figure, self))
+        self.worker_data.connect(self.render_worker_status)
         try:
             self.figure_dll = ctypes.windll.JZTDevDll
         except:
             self.parent.warn.add_warn('指纹仪dll加载失败')
         self.set_up_device()
+
+    def render_worker_status(self, data):
+        # 仅提供提交指纹成功时的刷新功能
+        persons = data['all']
+        self.parent.warn.add_warn('{}签到成功'.format(data['people']))
+        for i in persons:
+            if i['id'] in self.parent.data['worker_status']:
+                lines = self.parent.data['worker_status'][i['id']]
+                lines[0].setText(i['worker'])
+                lines[1].setText(i['position'])
+                lines[2].setText('是' if i['study'] else '否'),
+                lines[3].setText(self.render_data(i['checked'])),
+            else:
+                self.parent.data['worker_status'][i['id']] = [
+                    AlignHCenterTableItem(i['worker']),
+                    AlignHCenterTableItem(i['position']),
+                    AlignHCenterTableItem('是' if i['study'] else '否'),
+                    AlignHCenterTableItem(self.render_data(i['checked'])),
+                ]
+                row = self.tableWidget.rowCount()
+                self.tableWidget.setRowCount(row + 1)
+                for index, d in enumerate(self.parent.data['worker_status'][i['id']]):
+                    self.tableWidget.setItem(row, index, d)
 
     def BeginButtonClicked(self):
         message_box = QtWidgets.QMessageBox.warning(self.parent, '警告', '锁定点名表后将无法修改出勤人员，确定么',
@@ -200,14 +225,19 @@ class DisplayWorkerForm(QtWidgets.QWidget, Ui_DisplayWorker):
         开始正式点名
         :return:
         '''
-        self._begin_call_over.emit()
+        request = HttpRequest(parent=self.parent,
+                              url='api/v2/call_over/begin-call-over/',
+                              method='post'
+                              )
+        request.failed.connect(lambda message:self.parent.warn.add_warn(message))
+        request.success.connect(lambda data:self._begin_call_over.emit(data))
+        request.start()
 
     def closeEvent(self, QCloseEvent):
         try:
             self.parent.device.figure_timer.disconnect()
         except:
             pass
-        print('要关闭了')
 
     def render_data(self, data: str):
         if data:

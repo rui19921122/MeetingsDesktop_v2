@@ -42,8 +42,7 @@ class DeviceDialog(QtWidgets.QDialog, dialog.Ui_Dialog):
                 self.parent.device.camera_devices.index(self.parent.device.current_camera))
         else:
             self.CameraComboBox.addItem('无照相设备')
-            self.CameraComboBox.setCurrentIndex(1)
-            self.CameraComboBox.disconnect()
+            self.CameraComboBox.setCurrentIndex(0)
             self.CameraComboBox.setDisabled(True)
 
     def RefreshButtonClicked(self):

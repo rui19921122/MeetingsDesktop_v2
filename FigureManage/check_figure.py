@@ -19,5 +19,6 @@ def check_figure(widget, next_time=1500):
             widget.parent.device.figure_timer.start(next_time)
         elif f == 1:
             pass
-    except BaseException:
+    except BaseException as error:
+        print(error)
         widget.parent.warn.add_warn('指纹采集出错')

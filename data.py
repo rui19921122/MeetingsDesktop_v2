@@ -14,6 +14,7 @@ class DeviceInfo():
         self.current_audio = None  # type: QtMultimedia.QAudioDeviceInfo
         self.camera_devices = []  # type:list[QtMultimedia.QCameraInfo]
         self.current_camera = None  # type: QtMultimedia.QCameraInfo
+        self.camera_timer = None # type: QtCore.QTimer
         self.error_message = {'camera': None, 'audio': None, 'figure': None}
         self.figure = None  # 指纹仪设备，记录指纹仪编号，当为False时为不可采集指纹，其他时候均为可采集，判断时注意判别
         self.figure_timer = None # type: QtCore.QTimer
