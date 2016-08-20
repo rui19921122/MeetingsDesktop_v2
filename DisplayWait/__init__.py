@@ -130,7 +130,7 @@ class DisplayWorkerForm(QtWidgets.QWidget, Ui_DisplayWorker):
                 self.parent.device.figure_timer = QtCore.QTimer()
         else:
             self.set_device_error_message("未发现有效的指纹仪采集设备", 'figure')
-            self.parent.device.figure = False
+            self.parent.device.figure = None
 
     def refresh_worker_status(self):
         request = HttpRequest(parent=self.parent, url='api/v2/call_over/get-call-over-person/', method='get')
@@ -144,7 +144,6 @@ class DisplayWorkerForm(QtWidgets.QWidget, Ui_DisplayWorker):
         :param data:
         :return:
         """
-        # print(yaml.dump(data))
         origin = self.parent.data.get('lock', False)
         if 'attend' in data:
             self.parent.data['lock'] = data['attend']['lock']

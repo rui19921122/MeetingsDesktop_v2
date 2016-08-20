@@ -16,6 +16,8 @@ class LoginForm(QtWidgets.QWidget, Ui_Form):
         self.FigureButton.setDisabled(True)
         self.LoginButton.clicked.connect(self.HandleLoginButtonClicked)
         self.password.textChanged.connect(self.handle_password_change)
+        self.FigureButton.setDisabled(True)
+        self.LoginButton.setDisabled(True)
 
     def handle_password_change(self):
         length = len(self.password.text())
@@ -29,18 +31,14 @@ class LoginForm(QtWidgets.QWidget, Ui_Form):
     def HandleLoginButtonClicked(self):
         username = self.username.text()
         password = self.password.text()
-        # if len(username) < 1:
-        if len(username) > 1:
+        if len(username) < 1:
             self.parent.warn.add_warn('请输入用户名')
             self.username.setText('')
             self.password.setText('')
         else:
-            # thread = HttpRequest(parent=self.parent, url='api/v2/auth/login/', method='post',
-            #                      data={'username': username,
-            #                            'password': password})
             thread = HttpRequest(parent=self.parent, url='api/v2/auth/login/', method='post',
-                                 data={'username': 'test',
-                                       'password': '111111'})
+                                 data={'username': username,
+                                       'password': password})
             thread.failed.connect(lambda message: self.parent.warn.add_warn(message))
             thread.success.connect(lambda message: self.login_success.emit())
             thread.start()

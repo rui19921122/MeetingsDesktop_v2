@@ -10,6 +10,7 @@ import pdb
 from UrlFunc.url_resolve import parse_url
 
 
+
 class HttpRequest(QThread):
     success = QtCore.pyqtSignal(dict)
     failed = QtCore.pyqtSignal(str)
@@ -36,20 +37,23 @@ class HttpRequest(QThread):
             else:
                 raise Exception('不正确的方法')
             if response.status_code >= 300:
-                data = response.json()
-                if 'non_field_errors' in data:
-                    error_message = data['non_field_errors']
-                else:
-                    error_message = data.get('error', '未知错误')
-                message = '网络请求错误，错误码为{}，原因为{}'.format(response.status_code, error_message)
-                self.failed.emit(message)
+                try:
+                    data = response.json()
+                    if 'non_field_errors' in data:
+                        error_message = data['non_field_errors']
+                    else:
+                        error_message = data.get('error', '未知错误')
+                    message = '网络请求错误，错误码为{}，原因为{}'.format(response.status_code, error_message)
+                    self.failed.emit(message)
+                except:
+                    print(response.text)
             else:
                 data = response.json()
                 self.success.emit(data)
         except requests.Timeout as error:
-            print('timeout error {}'.format(error))
             self.failed.emit('网络请求错误，超时，请检查网络连接')
         except BaseException as error:
+            print('BaseException'.format(error))
             self.failed.emit(str(error.args))
         finally:
             mutex.unlock()

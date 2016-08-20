@@ -24,7 +24,7 @@ class OverCallWidget(QtWidgets.QWidget, Ui_Form):
 
     def submit_note(self):
         def handle_success(data):
-            self.parent.warn('提交备注成功')
+            self.parent.warn.add_warn('提交备注成功')
             self.textEdit.setDisabled(True)
             self.pushButton.setDisabled(True)
 
